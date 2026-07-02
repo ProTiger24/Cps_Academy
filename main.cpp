@@ -1,5 +1,3 @@
-///   ***   ---   ||         In the name of ALLAH        |||   ---   ***   ///
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -61,16 +59,25 @@ void faltu(T arg, const hello &...rest)
 ll gcd(ll a, ll b) { return __gcd(a, b); }
 ll lcm(ll a, ll b) { return a * (b / gcd(a, b)); }
 
-vi adj[2100005];
-int level[2100005];
+int n, m;
+vector<int> adj[100005];
+int vis[100005];
 
-void dfs(int u, int p)
+void dfs(int u, int prev)
 {
+    if (vis[u])
+    {
+
+        cout << "Cycle detected at node:" << endl;
+        return;
+    }
+
+    vis[u] = 1;
+
     for (auto v : adj[u])
     {
-        if (v != p)
+        if (v != prev)
         {
-            level[v] = level[u] + 1;
             dfs(v, u);
         }
     }
@@ -78,56 +85,27 @@ void dfs(int u, int p)
 
 void solve()
 {
-    int n;
-    cin >> n;
+    cin >> n >> m;
 
-    for (int i = 0; i <= n; i++)
-    {
-        adj[i].clear();
-        level[i] = 0;
-    }
-
-    for (int i = 0; i < n - 1; i++)
+    for (int i = 0; i < m; i++)
     {
         int u, v;
         cin >> u >> v;
-
-        adj[u].PB(v);
-        adj[v].PB(u);
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
-    level[1] = 0;
+
     dfs(1, 0);
-
-    int max_level = 0;
-    int max_node = 1;
-
-    for (int i = 1; i <= n; i++)
-    {
-        if (level[i] > max_level)
-        {
-            max_level = level[i];
-            max_node = i;
-        }
-    }
-
-    mem(level, 0);
-    dfs(max_node, 0);
-
-    int diameter = 0;
-
-    for (int i = 1; i <= n; i++)
-    {
-        diameter = max(diameter, level[i]);
-    }
-
-    cout << diameter << endl;
 }
 
 int main()
 {
     optimize();
-
-    solve();
-
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
     return 0;
 }
